@@ -9,7 +9,8 @@ library(VariantAnnotation)
 vcf <- readVcf("inst/extdata/Challenge_data_(1).vcf", "hg19") %>% expand()
 
 ################################################################################
-## examine the parameters of this object ##
+#### examine the parameters of this object ####
+################################################################################
 
 # look at the object
 vcf
@@ -25,5 +26,18 @@ info(header(vcf)) %>% as.data.frame()
 
 # what info is in the genotype/FORMAT field?
 geno(header(vcf))
+
 ################################################################################
+#### Extract metrics from INFO field of vcf file ####
+################################################################################
+
+# these are the info metrics I want to extract
+info_metrics <- info(vcf) %>% as.data.frame() %>%
+  dplyr::mutate(variant_type = TYPE,
+                total_read_depth = DP, #depth of sequencing coverage at site of variation
+                variant_read_count = AO, #number of reads supporting the variant
+                reference_read_count = RO, #number of of reads supporting the reference
+                percent_variant_reads = 100*AO/DP) %>% #percentage of reads supporting the variant
+  dplyr::select(variant_type, total_read_depth, variant_read_count, reference_read_count, percent_variant_reads)
+
 
