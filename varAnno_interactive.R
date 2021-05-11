@@ -4,6 +4,7 @@
 library(tidyverse)
 library(VariantAnnotation)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
+library(BSgenome.Hsapiens.UCSC.hg19)
 
 # read in the vcf file to a ExpandedVCF object - one variant per line
 vcf <- readVcf("inst/extdata/Challenge_data_(1).vcf", "hg19") %>% expand()
@@ -105,6 +106,28 @@ stopifnot(table(allvar_collapsed$QUERYID) %>% max() == 1)
 
 # look at it
 allvar_collapsed %>% head()
+
+
+################################################################################
+#### determine CONSEQUENCE of coding variants #### 
+################################################################################
+
+# predict coding variants using rowData, txdb, Hspaiens BSGenome object, and alt accessor of vcf
+coding <- predictCoding(rd, txdb, seqSource=Hsapiens, alt(vcf) )
+
+# how many of each kind?
+table(coding$CONSEQUENCE)
+
+# explicitly set the levels of consequence - frameshift/nonsense are similar without more specific info
+coding$CONSEQUENCE <- factor(coding$CONSEQUENCE, levels = c("frameshift", "nonsense", "nonsynonymous", "synonymous"))
+
+# what is order of levels of CONSEQUENCE factor?
+levels(coding$CONSEQUENCE)
+
+# need to collapse coding to keep most severe annotation per variant
+length(coding) == length(rd) 
+
+
 
 # plan
 # extract metrics from info section of vcf - done
