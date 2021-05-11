@@ -68,8 +68,23 @@ intersect(seqlevels(rd) , seqlevels(txdb))
 stopifnot(mean(seqlengths(rd) == seqlengths(txdb)) == 1)
 
 ################################################################################
-#### Adjust chromosome names in VCF to match TxDb #### 
+#### Annotate all variants to genomic feature/location #### 
 ################################################################################
+
+# annotate variants based on txdb
+allvar <- locateVariants(rd, TxDb.Hsapiens.UCSC.hg19.knownGene, AllVariants())
+
+# look at it
+head(allvar)
+
+# what locations are represented
+table(allvar$LOCATION)
+
+# need to collapse allvar to keep most severe annotation per variant
+length(allvar) == length(rd) 
+
+
+
 
 
 # plan
