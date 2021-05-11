@@ -5,6 +5,8 @@ library(tidyverse)
 library(VariantAnnotation)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 library(BSgenome.Hsapiens.UCSC.hg19)
+library(httr)
+library(jsonlite)
 
 # read in the vcf file to a ExpandedVCF object - one variant per line
 vcf <- readVcf("inst/extdata/Challenge_data_(1).vcf", "hg19") %>% expand()
@@ -143,13 +145,45 @@ stopifnot(table(coding_collapsed$QUERYID) %>% max() == 1)
 coding_collapsed %>% head()
 
 
+################################################################################
+#### generate ExAC IDs for all variants in vcf/rd #### 
+################################################################################
+
+# make a new metadata column on the rowData in the ExAC variant naming style
+mcols(rd)$ExACname <- paste(str_remove(seqnames(rd), "chr"), start(rd), rd$REF, rd$ALT, sep="-")
+
+
+
+################################################################################
+#### perform bulk query to ExAC database for all variants by ExAC ID #### 
+################################################################################
+
+# establish the ExAC base url for database queries
+baseURL<-"http://exac.hms.harvard.edu/"
+
+# using a POST call perform a bulk query of ExAC database using the variant names
+res<- POST(paste0(baseURL, "/rest/bulk/variant/variant"), body = toJSON(rd$ExACname))
+
+# convert the data from JSON format to list
+dat<-content(res, "text") %>% fromJSON()             
+
+# extract the ExAC allele frequencies from the dat list
+exac_allele_freq<-sapply(dat, function(x){
+  x$allele_freq
+}) %>% 
+  unlist(use.names = T) %>% 
+  as_tibble(rownames = NA) %>% 
+  dplyr::mutate(ExACname = rownames(.), ExAC_allele_freq = value) %>% 
+  dplyr::select(ExACname, ExAC_allele_freq)
+
+
 
 # plan
 # extract metrics from info section of vcf - done
 # annotate all variants to region/feature - done
 # annotate coding variants for consequence - done
-# generate ExAC styles names for all variants
-# query ExAC database for all variants
-# extract allele_frequency for variants in ExAC database
+# generate ExAC styles names for all variants - done
+# query ExAC database for all variants - done
+# extract allele_frequency for variants in ExAC database - done
 # giant merge at the end or incremental merge at each step?
 # export to csv
