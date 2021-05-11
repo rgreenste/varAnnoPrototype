@@ -72,7 +72,7 @@ stopifnot(mean(seqlengths(rd) == seqlengths(txdb)) == 1)
 ################################################################################
 
 # annotate variants based on txdb
-allvar <- locateVariants(rd, TxDb.Hsapiens.UCSC.hg19.knownGene, AllVariants())
+allvar <- locateVariants(rd, txdb, AllVariants())
 
 # look at it
 head(allvar)
@@ -83,13 +83,32 @@ table(allvar$LOCATION)
 # need to collapse allvar to keep most severe annotation per variant
 length(allvar) == length(rd) 
 
+# what is order of levels of LOCATION factor?
+levels(allvar$LOCATION)
 
+# explicitly reorder the levels of the LOCATION factor by order of assumed 'severity' if mutated
+allvar$LOCATION <- factor(allvar$LOCATION, levels = c("coding", "spliceSite", "fiveUTR", "promoter", "threeUTR", "intron", "intergenic"))
 
+# what is order of levels of LOCATION factor?
+levels(allvar$LOCATION)
 
+# group by QUERYID (the row number from the vcf file / rd (rowData))
+# keep rows based on location type in order of worst "consequence" 
+# keep one entry per gene (based on smallest TXID) if found in multiple transcripts
+allvar_collapsed <- allvar %>% data.frame() %>% mutate(TXID_noNA = replace_na(TXID, "*")) %>% # convert NAs in TXID to *
+  group_by(QUERYID) %>% slice_min(LOCATION) %>% # keep the smallest value (most "severe") of LOCATION factor per QUERYID
+  slice_min(TXID_noNA) %>% # keep the smallest transcript based on TXID_noNA if variant found in more than on TXID
+  dplyr::select(LOCATION, QUERYID, GENEID) # keep columns of interest for simplicity
+
+# make sure there is only one row per QUERYID
+stopifnot(table(allvar_collapsed$QUERYID) %>% max() == 1)
+
+# look at it
+allvar_collapsed %>% head()
 
 # plan
 # extract metrics from info section of vcf - done
-# annotate all variants to region/feature
+# annotate all variants to region/feature - done
 # annotate coding variants for consequence
 # generate ExAC styles names for all variants
 # query ExAC database for all variants
