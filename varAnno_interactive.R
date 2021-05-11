@@ -127,12 +127,27 @@ levels(coding$CONSEQUENCE)
 # need to collapse coding to keep most severe annotation per variant
 length(coding) == length(rd) 
 
+# group by QUERYID (the row number from the vcf file / rd (rowData))
+# keep one row based on worst coding variant CONSEQUENCE, one row per gene
+# generate the ExAC name based on convetion
+coding_collapsed <- coding %>% data.frame() %>% group_by(QUERYID) %>% # group by QUERYID 
+  slice_min(CONSEQUENCE) %>% # keep one row per variant based on worst CONSEQUENCE, smallest level of factor
+  slice_min(TXID) %>% # keep one entry per gene (based on smallest TXID) if found in multiple transcripts
+  mutate(ExACname = paste(str_remove(seqnames, "chr"), start, REF, ALT, sep="-")) %>% # add a variant name in the ExAC style chrom#-position-REF-ALT
+  dplyr:: select(QUERYID, GENEID, CONSEQUENCE, REFCODON, VARCODON, REFAA, VARAA, ExACname)  # keep columns of interest for simplicity
+
+# make sure there is only one row per QUERYID
+stopifnot(table(coding_collapsed$QUERYID) %>% max() == 1)
+
+# look at it
+coding_collapsed %>% head()
+
 
 
 # plan
 # extract metrics from info section of vcf - done
 # annotate all variants to region/feature - done
-# annotate coding variants for consequence
+# annotate coding variants for consequence - done
 # generate ExAC styles names for all variants
 # query ExAC database for all variants
 # extract allele_frequency for variants in ExAC database
