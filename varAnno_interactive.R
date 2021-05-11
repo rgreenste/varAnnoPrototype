@@ -3,7 +3,7 @@
 # load dependencies
 library(tidyverse)
 library(VariantAnnotation)
-
+library(TxDb.Hsapiens.UCSC.hg19.knownGene)
 
 # read in the vcf file to a ExpandedVCF object - one variant per line
 vcf <- readVcf("inst/extdata/Challenge_data_(1).vcf", "hg19") %>% expand()
@@ -41,3 +41,43 @@ info_metrics <- info(vcf) %>% as.data.frame() %>%
   dplyr::select(variant_type, total_read_depth, variant_read_count, reference_read_count, percent_variant_reads)
 
 
+################################################################################
+#### Adjust chromosome names in VCF to match TxDb #### 
+################################################################################
+
+# need to convert chromosome names from "1" to "chr1" style
+# check which chromosomes have variants 
+which(table(seqnames(rowRanges(vcf))) > 0)
+
+# if only main chroms then proceed
+rd<-rowRanges(vcf)
+# keep only the standard chromosomes
+rd<-keepSeqlevels(rd, c(seq(1:22), "X", "Y"))
+# convert to UCSC styles
+newStyle <- mapSeqlevels(seqlevels(rd), "UCSC")
+rd <- renameSeqlevels(rd, newStyle)
+
+# load the txdb object containing hg19 feature data
+txdb<-TxDb.Hsapiens.UCSC.hg19.knownGene
+txdb<-keepSeqlevels(txdb, seqlevels(rd))
+
+# look at the shared chromsomes between rowData and txdb
+intersect(seqlevels(rd) , seqlevels(txdb))
+
+# make sure the seqlengths of the chromosomes in each are the same
+stopifnot(mean(seqlengths(rd) == seqlengths(txdb)) == 1)
+
+################################################################################
+#### Adjust chromosome names in VCF to match TxDb #### 
+################################################################################
+
+
+# plan
+# extract metrics from info section of vcf - done
+# annotate all variants to region/feature
+# annotate coding variants for consequence
+# generate ExAC styles names for all variants
+# query ExAC database for all variants
+# extract allele_frequency for variants in ExAC database
+# giant merge at the end or incremental merge at each step?
+# export to csv
