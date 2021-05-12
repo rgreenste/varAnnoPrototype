@@ -12,6 +12,14 @@ importExpandedVCF <- function(vcfFile, genome = "hg19") {
   if(!(stringr::str_sub(vcfFile, start = -3, end = -1) %>% stringr::str_to_lower()) == "vcf")
     stop("'vcfFile' must be a vcf file")
 
+  # check name of genome, must be one of possible human genome assemblies
+  if(!genome %in% c("hg18", "hg19", "hg38"))
+    stop("'genome' should be one of 'hg18', 'hg19', 'hg38'")
+
+  # for this release only hg19 is currently supported
+  if(!genome == "hg19")
+    stop("for this release only 'hg19' is currently supported")
+
   # check file exists then read in the vcf file and expand
   if(file.exists(vcfFile)) {
     VariantAnnotation::readVcf(vcfFile, genome) %>% VariantAnnotation::expand()
