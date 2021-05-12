@@ -177,6 +177,17 @@ exac_allele_freq<-sapply(dat, function(x){
   dplyr::select(ExACname, ExAC_allele_freq)
 
 
+################################################################################
+#### Merge Existing Data Objects #### 
+################################################################################
+
+# check lengths match - should be as they come from same ExpandedVCF object with no subsetting of rows
+stopifnot(nrow(info_metrics) == length(rd))
+
+rd %>% as.data.frame() %>% tibble::rowid_to_column("QUERYID") %>% # make a queryID column from rd row index
+  dplyr::select(ExACname, chromosome = seqnames, start, end, REF, ALT, QUERYID) %>% # extract relevant columns from rd
+  cbind(info_metrics) %>% head() # merge rd/rowData with info_metrics
+
 
 # plan
 # extract metrics from info section of vcf - done
