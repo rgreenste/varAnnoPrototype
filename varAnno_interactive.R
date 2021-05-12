@@ -210,6 +210,8 @@ annotatedVCF<-annotatedVCF_test %>%
 # look at it
 annotatedVCF %>% head()
 
+# export results to csv file
+write_csv(annotatedVCF, file = "annotated_challenge_data_vcf.csv")
 
 # plan
 # extract metrics from info section of vcf - done
