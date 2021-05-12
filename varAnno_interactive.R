@@ -184,13 +184,31 @@ exac_allele_freq<-sapply(dat, function(x){
 # check lengths match - should be as they come from same ExpandedVCF object with no subsetting of rows
 stopifnot(nrow(info_metrics) == length(rd))
 
-rd %>% as.data.frame() %>% tibble::rowid_to_column("QUERYID") %>% # make a queryID column from rd row index
+annotatedVCF_test <- rd %>% as.data.frame() %>% tibble::rowid_to_column("QUERYID") %>% # make a queryID column from rd row index
   dplyr::select(ExACname, chromosome = seqnames, start, end, REF, ALT, QUERYID) %>% # extract relevant columns from rd
   cbind(info_metrics) %>%  # merge rd/rowData with info_metrics
   left_join(allvar_collapsed, by = "QUERYID") %>% # merge allvar_collapsed containing all variant location annotation
   left_join(coding_collapsed, by = "QUERYID") %>% # merge coding_collapsed containing coding variant consequence
-  left_join(exac_allele_freq, by = c("ExACname.x" = "ExACname")) %>% # merge exac_allele_freq by ExACname columns
-  head()
+  left_join(exac_allele_freq, by = c("ExACname.x" = "ExACname")) # merge exac_allele_freq by ExACname columns
+
+# look at it
+annotatedVCF_test %>% head(n=15)
+
+# do some checking on the above joins
+table(annotatedVCF_test$CONSEQUENCE, annotatedVCF_test$LOCATION) # make sure only coding changes have a consequence
+stopifnot((table(annotatedVCF_test$CONSEQUENCE, annotatedVCF_test$LOCATION) %>% colSums() > 0) == c(1,rep(0,6)))
+stopifnot(mean(annotatedVCF_test$GENEID.x == annotatedVCF_test$GENEID.y, na.rm = T) == 1) # are the GENEIDs from allvar and coding the same?
+stopifnot(mean(annotatedVCF_test$ExACname.x == annotatedVCF_test$ExACname.y, na.rm = T) == 1) # are the ExAC names from different tables the same?
+stopifnot(nrow(annotatedVCF_test) == length(rd)) # check that length of output is the same as rd/rowData
+stopifnot(annotatedVCF_test$QUERYID == seq(1:length(rd))) # check that all QUERYID are represented
+
+# select final columns and rename
+annotatedVCF<-annotatedVCF_test %>% 
+  dplyr::select(-QUERYID, -GENEID.y, -ExACname.y, # drop redundant columns and QUERYID which is just an index value
+                                    ExACname = ExACname.x, # rename column for clarity
+                                    GENEID_Entrez = GENEID.x) # rename column for clarity
+# look at it
+annotatedVCF %>% head()
 
 
 # plan
@@ -200,5 +218,6 @@ rd %>% as.data.frame() %>% tibble::rowid_to_column("QUERYID") %>% # make a query
 # generate ExAC styles names for all variants - done
 # query ExAC database for all variants - done
 # extract allele_frequency for variants in ExAC database - done
-# giant merge at the end or incremental merge at each step?
+# giant merge at the end - done
+# incremental merge at each step?
 # export to csv
