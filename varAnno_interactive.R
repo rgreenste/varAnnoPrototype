@@ -189,6 +189,7 @@ rd %>% as.data.frame() %>% tibble::rowid_to_column("QUERYID") %>% # make a query
   cbind(info_metrics) %>%  # merge rd/rowData with info_metrics
   left_join(allvar_collapsed, by = "QUERYID") %>% # merge allvar_collapsed containing all variant location annotation
   left_join(coding_collapsed, by = "QUERYID") %>% # merge coding_collapsed containing coding variant consequence
+  left_join(exac_allele_freq, by = c("ExACname.x" = "ExACname")) %>% # merge exac_allele_freq by ExACname columns
   head()
 
 
