@@ -188,6 +188,7 @@ rd %>% as.data.frame() %>% tibble::rowid_to_column("QUERYID") %>% # make a query
   dplyr::select(ExACname, chromosome = seqnames, start, end, REF, ALT, QUERYID) %>% # extract relevant columns from rd
   cbind(info_metrics) %>%  # merge rd/rowData with info_metrics
   left_join(allvar_collapsed, by = "QUERYID") %>% # merge allvar_collapsed containing all variant location annotation
+  left_join(coding_collapsed, by = "QUERYID") %>% # merge coding_collapsed containing coding variant consequence
   head()
 
 
