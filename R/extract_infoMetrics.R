@@ -8,6 +8,8 @@
 #' @export
 #'
 #' @examples \dontrun{extract_infoMetrics(expandedVCFfile)}
+#'
+#' @importFrom rlang .data
 extract_infoMetrics <- function(expandedVCFfile) {
 
   # check the class of input file
@@ -20,12 +22,12 @@ extract_infoMetrics <- function(expandedVCFfile) {
 
   # extract various metrics from INFO field of vcf file
   VariantAnnotation::info(expandedVCFfile) %>% as.data.frame() %>%
-    dplyr::mutate(variant_type = TYPE, # type of variant
-                  total_read_depth = DP, #depth of sequencing coverage at site of variation
-                  variant_read_count = AO, #number of reads supporting the variant
-                  reference_read_count = RO, #number of of reads supporting the reference
-                  percent_variant_reads = round(100*AO/DP,2)) %>% #percentage of reads supporting the variant
-    dplyr::select(variant_type, total_read_depth, variant_read_count, reference_read_count, percent_variant_reads)
+    dplyr::mutate(variant_type = .data$TYPE, # type of variant
+                  total_read_depth = .data$DP, #depth of sequencing coverage at site of variation
+                  variant_read_count = .data$AO, #number of reads supporting the variant
+                  reference_read_count = .data$RO, #number of of reads supporting the reference
+                  percent_variant_reads = round(100*.data$AO/.data$DP,2)) %>% #percentage of reads supporting the variant
+    dplyr::select(.data$variant_type, .data$total_read_depth, .data$variant_read_count, .data$reference_read_count, .data$percent_variant_reads)
 
 }
 
