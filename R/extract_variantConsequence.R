@@ -30,6 +30,9 @@ extract_variantConsequence <- function (rowData, expandedVCFfile){
     dplyr::mutate(ExACname = paste(stringr::str_remove(.data$seqnames, "chr"), .data$start, .data$REF, .data$ALT, sep="-")) %>% # add a variant name in the ExAC style chrom#-position-REF-ALT
     dplyr:: select(.data$QUERYID, .data$GENEID, .data$CONSEQUENCE, .data$REFCODON, .data$VARCODON, .data$REFAA, .data$VARAA, .data$ExACname)  # keep columns of interest for simplicity
 
+  # make sure there is only one row per QUERYID
+  if(!table(coding_collapsed$QUERYID) %>% max() == 1)
+    stop("There is more than one row per variant. Subsequent joins will fail. Additional redundancies must be evaluated")
 
   coding_collapsed
 
