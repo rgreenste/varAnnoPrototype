@@ -6,7 +6,15 @@ Authors@R:
            family = "Greenstein",
            role = c("aut", "cre"),
            email = "rgreenstein@wustl.edu")
-Description: vcf files are complex and can be difficult to interpret. varAnnoPrototype is a prototype variant annotation tool that extracts some relevant information from vcf files in addition to annotating the variants contained within the file to the location and type of genomic feature in which they are located as well as their biological consequence. This package contains a set of functions to read in a vcf file, extract the relevant information, perform the genomic annotations, and output a dataframe containing the result which can be written to file, viewed in external software, and shared with others.
+Description: vcf files are complex and can be difficult to interpret. 
+    varAnnoPrototype is a prototype variant annotation tool that extracts some 
+    relevant information from vcf files in addition to annotating the variants 
+    contained within the file to the location and type of genomic feature in 
+    which they are located as well as their biological consequence. This 
+    package contains a set of functions to read in a vcf file, extract the 
+    relevant information, perform the genomic annotations, and output a 
+    dataframe containing the result which can be written to file, viewed in 
+    external software, and shared with others.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
