@@ -16,6 +16,8 @@ Imports:
     BSgenome.Hsapiens.UCSC.hg19,
     dplyr,
     GenomeInfoDb,
+    httr,
+    jsonlite,
     magrittr,
     rlang,
     stringr,
