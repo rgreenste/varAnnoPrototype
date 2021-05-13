@@ -1,3 +1,15 @@
+#' Extract Allele Frequencies from ExAC API
+#'
+#' Query the ExAC API for variants based on their ExAC name and return allele frequencies of variants from that database
+#'
+#' @param rowData GRanges object containing genomic coordinates for each variant and Reference (REF) and Alternate (ALT) alleles
+#'
+#' @return a tibble object containing allele frequencies and ExAC variant names for variants present within the ExAC database
+#' @export
+#'
+#' @examples \dontrun{extract_ExACalleleFreq(rowData)}
+#'
+#' @importFrom rlang .data
 extract_ExACalleleFreq <- function(rowData){
 
   # check the class of input file
@@ -23,9 +35,9 @@ extract_ExACalleleFreq <- function(rowData){
     x$allele_freq
   }) %>%
     unlist(use.names = T) %>%
-    tibble::as_tibble(rownames = NA) %>%
-    dplyr::mutate(ExACname = rownames(.), ExAC_allele_freq = value) %>%
-    dplyr::select(ExACname, ExAC_allele_freq)
+    tibble::as_tibble(rownames = NA) %>% # convert to tibble
+    dplyr::mutate(ExACname = rownames(.data), ExAC_allele_freq = .data$value) %>% # add columns of interest
+    dplyr::select(.data$ExACname, .data$ExAC_allele_freq) # keep desired columns
 
   exac_allele_freq
 }
