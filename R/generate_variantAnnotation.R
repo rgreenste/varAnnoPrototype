@@ -12,6 +12,17 @@ generate_variantAnnotation <- function(rowData, infoMetrics, variantLocation, va
   if(!(nrow(infoMetrics) == length(rowData)))
     stop("Error: 'infoMetrics' and 'rowData' are of different lengths. Check that both were generated from the same vcf file with no subsetting.")
 
+  # check the class of input file
+  if(!"data.frame" %in% class(variantLocation))
+    stop("Error: 'variantLocation' should be of class 'data.frame'. Please generate 'variantLocation' via the 'extract_variantLocation()' function before proceeding.")
+
+  # check the class of input file
+  if(!"data.frame" %in% class(variantConsequence))
+    stop("Error: 'variantConsequence' should be of class 'data.frame'. Please generate 'variantConsequence' via the 'extract_variantConsequence()' function before proceeding.")
+
+  # check the class of input file
+  if(!"data.frame" %in% class(exacAlleleFreq))
+    stop("Error: 'exacAlleleFreq' should be of class 'data.frame'. Please generate 'exacAlleleFreq' via the 'extract_ExACalleleFreq()' function before proceeding.")
 
   annotatedVCF_temp <- rowData %>% as.data.frame() %>% tibble::rowid_to_column("QUERYID") %>% # make a queryID column from rd row index
     dplyr::select(ExACname, chromosome = seqnames, start, end, REF, ALT, QUERYID) %>% # extract relevant columns from rd
