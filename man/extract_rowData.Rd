@@ -10,7 +10,7 @@ extract_rowData(expandedVCFfile)
 \item{expandedVCFfile}{object of ExpandedVCF class}
 }
 \value{
-GRanges object containing genomic coordinates for each variant and in the metadata columns Reference (REF) and Alternate (ALT) alleles, as well as quality scores (QUAL) and filter status
+GRanges object containing genomic coordinates for each variant and in the metadata columns Reference (REF) and Alternate (ALT) alleles, as well as quality scores (QUAL) and filter status and variant name in ExAC style (chromosome-position-reference-alternate)
 }
 \description{
 Extract the rowData from ExpandedVCF as GRanges object and convert seqlevels/chromsome names to UCSC style
