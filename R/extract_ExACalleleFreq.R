@@ -36,7 +36,8 @@ extract_ExACalleleFreq <- function(rowData){
   }) %>%
     unlist(use.names = T) %>%
     tibble::as_tibble(rownames = NA) %>% # convert to tibble
-    dplyr::mutate(ExACname = rownames(.data), ExAC_allele_freq = .data$value) %>% # add columns of interest
+    tibble::rownames_to_column(var = "ExACname") %>% # make the rownames into a new column
+    dplyr::mutate(ExAC_allele_freq = .data$value) %>% # rename column
     dplyr::select(.data$ExACname, .data$ExAC_allele_freq) # keep desired columns
 
   exac_allele_freq
