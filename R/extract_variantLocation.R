@@ -1,5 +1,7 @@
 #' Annotate Variants Based on Genomic Feature Location
 #'
+#' Extracts location of variants within genomic features
+#'
 #' @param rowData GRanges object containing genomic coordinates for each variant and Reference (REF) and Alternate (ALT) alleles
 #'
 #' @return tibble object containing information about the location of each variant with respect to genomic features and if located within a gene additionally the Gene ID number for that annotation

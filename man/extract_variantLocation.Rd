@@ -13,7 +13,7 @@ extract_variantLocation(rowData)
 tibble object containing information about the location of each variant with respect to genomic features and if located within a gene additionally the Gene ID number for that annotation
 }
 \description{
-Annotate Variants Based on Genomic Feature Location
+Extracts location of variants within genomic features
 }
 \examples{
 \dontrun{extract_variantLocation(rowData)}
