@@ -45,6 +45,13 @@ generate_variantAnnotation <- function(rowData, infoMetrics, variantLocation, va
   if(!mean(annotatedVCF_temp$ExACname.x == annotatedVCF_temp$ExACname.y, na.rm = T) == 1)
     warning("Error: Mismatch beween ExACname columns detected. Annotation discrepancy between 'rowData' and 'exacAlleleFreq'. Proceed with caution as annoations may be incorrect.")
 
+   # check that length of output is the same as rd/rowData
+  if(!nrow(annotatedVCF_temp) == length(rowData))
+    warning("Error: 'rowData' input and function output have different lengths. Some variants have been dropped from original file. Proceed with caution as annotations may be incorrect.")
+
+  # check that all QUERYID are represented
+  if(!all(annotatedVCF_temp$QUERYID %in% seq(1:length(rowData))))
+    warning("Error: Some variants have been dropped from original file. Proceed with caution as annotations may be incorrect.")
 
     annotatedVCF_temp %>% head()
 }
