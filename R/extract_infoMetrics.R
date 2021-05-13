@@ -1,5 +1,13 @@
 extract_infoMetrics <- function(expandedVCFfile) {
 
+  # check the class of input file
+  if(!class(expandedVCFfile) == "ExpandedVCF" )
+    stop("'expandedVCFfile' should be of class 'ExpandedVCF'. Please read in a vcf file with the importExpandedVCF function")
+
+  # check for appropriate info fields
+  if(!all(c("TYPE", "DP", "AO", "RO") %in% (VariantAnnotation::info(expandedVCFfile) %>% as.data.frame() %>% names())))
+    stop("Not all requested INFO columns are present - vcf file cannot be annotated as requested")
+
   # extract various metrics from INFO field of vcf file
   VariantAnnotation::info(expandedVCFfile) %>% as.data.frame() %>%
     dplyr::mutate(variant_type = TYPE, # type of variant
