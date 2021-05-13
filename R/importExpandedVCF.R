@@ -24,6 +24,8 @@ importExpandedVCF <- function(vcfFile, genome = "hg19") {
   if(!genome == "hg19")
     stop("Error: For this release only 'hg19' is currently supported")
 
+  message("Reading in the vcf file")
+
   # check file exists then read in the vcf file and expand
   if(file.exists(vcfFile)) {
     VariantAnnotation::readVcf(vcfFile, genome) %>% VariantAnnotation::expand()
