@@ -6,16 +6,18 @@
 #' @export
 #'
 #' @examples \dontrun{extract_variantLocation(rowData)}
+#'
+#' @importFrom rlang .data
 extract_variantLocation <- function (rowData) {
 
    # check for correct genome
-  if(!genome(rd)[1] == "hg19")
+  if(!GenomeInfoDb::genome(rowData)[1] == "hg19")
     stop("for this release only 'hg19' is currently supported")
 
   # annotate variants based on txdb
-  allvar <- VariantAnnotation::locateVariants(rd, # rowRanges from vcf renamed to have UCSC style chromosomes
+  allvar <- VariantAnnotation::locateVariants(rowData, # rowRanges from vcf renamed to have UCSC style chromosomes
                                               TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene, #UCSC txdb object
-                                              AllVariants()) # what variants to annotate - all of them
+                                              VariantAnnotation::AllVariants()) # what variants to annotate - all of them
 
   # explicitly reorder the levels of the LOCATION factor by order of assumed 'severity' if mutated
   allvar$LOCATION <- factor(allvar$LOCATION, levels = c("coding", "spliceSite", "fiveUTR", "promoter", "threeUTR", "intron", "intergenic"))
@@ -23,10 +25,10 @@ extract_variantLocation <- function (rowData) {
   # group by QUERYID (the row number from the vcf file / rd (rowData))
   # keep rows based on location type in order of worst "consequence"
   # keep one entry per gene (based on smallest TXID) if found in multiple transcripts
-  allvar_collapsed <- allvar %>% data.frame() %>% dplyr::mutate(TXID_noNA = tidyr::replace_na(TXID, "*")) %>% # convert NAs in TXID to *
-    dplyr::group_by(QUERYID) %>% dplyr::slice_min(LOCATION) %>% # keep the smallest value (most "severe") of LOCATION factor per QUERYID
-    dplyr::slice_min(TXID_noNA) %>% # keep the smallest transcript based on TXID_noNA if variant found in more than on TXID
-    dplyr::select(LOCATION, QUERYID, GENEID) # keep columns of interest for simplicity
+  allvar_collapsed <- allvar %>% data.frame() %>% dplyr::mutate(TXID_noNA = tidyr::replace_na(.data$TXID, "*")) %>% # convert NAs in TXID to *
+    dplyr::group_by(.data$QUERYID) %>% dplyr::slice_min(.data$LOCATION) %>% # keep the smallest value (most "severe") of LOCATION factor per QUERYID
+    dplyr::slice_min(.data$TXID_noNA) %>% # keep the smallest transcript based on TXID_noNA if variant found in more than on TXID
+    dplyr::select(.data$LOCATION, .data$QUERYID, .data$GENEID) # keep columns of interest for simplicity
 
   # make sure there is only one row per QUERYID
   if(!table(allvar_collapsed$QUERYID) %>% max() == 1)
