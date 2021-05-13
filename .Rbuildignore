@@ -5,3 +5,4 @@
 ^varAnno_interactive\.R$
 ^annotated_challenge_data_vcf\.csv$
 ^LICENSE\.md$
+^README\.Rmd$
