@@ -55,6 +55,7 @@ vcfFile<-system.file("extdata", "Challenge_data_(1).vcf", package="varAnnoProtot
 
 # import the vcf file with package function importExpandedVCF()
 vcfTest<-importExpandedVCF(vcfFile, genome = "hg19")
+#> Reading in the vcf file
 
 # take a quick look at the result
 vcfTest
@@ -223,12 +224,14 @@ Possible genomic feature locations include `coding`, `spliceSite`,
 ``` r
 # extract the variant location with respect to genomic features
 varLoc<-extract_variantLocation(rd)
+#> Determining the location of variants with respect to genomic features
 #> 'select()' returned many:1 mapping between keys and columns
 #> 'select()' returned many:1 mapping between keys and columns
 #> 'select()' returned many:1 mapping between keys and columns
 #> 'select()' returned many:1 mapping between keys and columns
 #> 'select()' returned many:1 mapping between keys and columns
 #> 'select()' returned many:1 mapping between keys and columns
+#> Extracting the feature annotation likely to have the most deleterious consequence if mutated
 
 # take a quick look at the result
 varLoc
@@ -274,6 +277,8 @@ variant name in the ExAC style.
 ``` r
 # extract the variant consequence with respect to genomic features
 varConseq<-extract_variantConsequence(rd)
+#> Predicting the effect of coding variants
+#> Extracting most deleterious consequence per variant
 
 # take a quick look at the result
 varConseq
@@ -304,7 +309,10 @@ present within the ExAC database are returned.
 ``` r
 # perform bulk query to ExAC database for all variants by ExAC ID and return allele frequencies
 exacAF<-extract_ExACalleleFreq(rd)
+#> Querying the ExAC API for information on variants in the vcf file
+#> Extracting content from POST request to ExAC API
 #> No encoding supplied: defaulting to UTF-8.
+#> Extracting allele frequencies from ExAC API content
 
 # take a quick look at the result
 head(exacAF)

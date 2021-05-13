@@ -160,7 +160,6 @@ head(varAnno)
 The `varAnno` dataframe can be written to file for viewing in external software and sharing with others.
 
 ```{r example_writeFile, echo = T, warning = F}
-
 # export results to csv file
 write.csv(varAnno, file = "annotated_challenge_data_vcf.csv", row.names = F)
 ```
