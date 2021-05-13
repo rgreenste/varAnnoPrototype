@@ -14,5 +14,9 @@ extract_rowData <- function(expandedVCFfile) {
   # keep only the standard chromosomes
   rd<-GenomeInfoDb::keepSeqlevels(rd, c(seq(1:22), "X", "Y"))
 
+  # convert to UCSC styles
+  newStyle <- GenomeInfoDb::mapSeqlevels(seqlevels(rd), "UCSC")
+  rd <- GenomeInfoDb::renameSeqlevels(rd, newStyle)
+
   rd
 }
