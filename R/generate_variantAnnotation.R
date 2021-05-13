@@ -60,7 +60,7 @@ generate_variantAnnotation <- function(rowData, infoMetrics, variantLocation, va
 
   # check the class of input file
   if(!class(rowData) == "GRanges" )
-    stop(" Error:'rowData' should be of class 'GRanges'. Please read in a vcf file with the importExpandedVCF function and extract the rowData with 'extract_rowData()' before proceeding")
+    stop("Error:'rowData' should be of class 'GRanges'. Please read in a vcf file with the importExpandedVCF function and extract the rowData with 'extract_rowData()' before proceeding")
 
   # check the class of input file
   if(!class(infoMetrics) == "data.frame" )
@@ -93,23 +93,23 @@ generate_variantAnnotation <- function(rowData, infoMetrics, variantLocation, va
 
   # make sure only coding changes have a consequence
   if(!(all(table(annotatedVCF_temp$CONSEQUENCE, annotatedVCF_temp$LOCATION) %>% colSums() > 0) %in% c(1,rep(0,6))))
-    warning("Error: Consequences detected for variants that are noncoding. Annotation discrepancy between 'variantLocation' and 'variantConsequence'. Proceed with caution as annoations may be incorrect.")
+    warning("Warning: Consequences detected for variants that are noncoding. Annotation discrepancy between 'variantLocation' and 'variantConsequence'. Proceed with caution as annoations may be incorrect.")
 
   # check that GENEIDs from variantLocation and variantConsequence the same?
   if(!mean(annotatedVCF_temp$GENEID.x == annotatedVCF_temp$GENEID.y, na.rm = T) == 1)
-    warning("Error: Mismatch beween GENEID columns detected. Annotation discrepancy between 'variantLocation' and 'variantConsequence'. Proceed with caution as annoations may be incorrect.")
+    warning("Warning: Mismatch beween GENEID columns detected. Annotation discrepancy between 'variantLocation' and 'variantConsequence'. Proceed with caution as annoations may be incorrect.")
 
    # check that ExAC names from rowData and exacAlleleFreq match
   if(!mean(annotatedVCF_temp$ExACname.x == annotatedVCF_temp$ExACname.y, na.rm = T) == 1)
-    warning("Error: Mismatch beween ExACname columns detected. Annotation discrepancy between 'rowData' and 'exacAlleleFreq'. Proceed with caution as annoations may be incorrect.")
+    warning("Warning: Mismatch beween ExACname columns detected. Annotation discrepancy between 'rowData' and 'exacAlleleFreq'. Proceed with caution as annoations may be incorrect.")
 
    # check that length of output is the same as rd/rowData
   if(!nrow(annotatedVCF_temp) == length(rowData))
-    warning("Error: 'rowData' input and function output have different lengths. Some variants have been dropped from original file. Proceed with caution as annotations may be incorrect.")
+    warning("Warning: 'rowData' input and function output have different lengths. Some variants have been dropped from original file. Proceed with caution as annotations may be incorrect.")
 
   # check that all QUERYID are represented
   if(!all(annotatedVCF_temp$QUERYID %in% seq(1:length(rowData))))
-    warning("Error: Some variants have been dropped from original file. Proceed with caution as annotations may be incorrect.")
+    warning("Warning: Some variants have been dropped from original file. Proceed with caution as annotations may be incorrect.")
 
   # select final columns and rename
   annotatedVCF<-annotatedVCF_temp %>%
