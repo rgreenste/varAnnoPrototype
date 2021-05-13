@@ -14,7 +14,7 @@ extract_variantLocation <- function (rowData) {
 
    # check for correct genome
   if(!GenomeInfoDb::genome(rowData)[1] == "hg19")
-    stop("for this release only 'hg19' is currently supported")
+    stop("Error: For this release only 'hg19' is currently supported")
 
   # annotate variants based on txdb
   allvar <- VariantAnnotation::locateVariants(rowData, # rowRanges from vcf renamed to have UCSC style chromosomes
@@ -34,7 +34,7 @@ extract_variantLocation <- function (rowData) {
 
   # make sure there is only one row per QUERYID
   if(!table(allvar_collapsed$QUERYID) %>% max() == 1)
-    stop("There is more than one row per variant. Subsequent joins will fail. Additional redundancies must be evaluated")
+    stop("Error: There is more than one row per variant. Subsequent joins will fail. Additional redundancies must be evaluated")
 
   allvar_collapsed
 }
