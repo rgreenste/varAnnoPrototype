@@ -1,3 +1,13 @@
+#' Import vcf file and generate ExpandedVCF object
+#'
+#'
+#' @param vcfFile character
+#' @param genome character
+#'
+#' @return ExpandedVCF
+#' @export
+#'
+#' @examples importExpandedVCF("myVariants.vcf", "hg19")
 importExpandedVCF <- function(vcfFile, genome = "hg19") {
 
   # check file format of vcf
