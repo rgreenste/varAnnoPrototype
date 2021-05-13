@@ -21,5 +21,16 @@ extract_variantConsequence <- function (rowData, expandedVCFfile){
   # explicitly set the levels of consequence by order of severity - frameshift/nonsense are similar without more specific info
   coding$CONSEQUENCE <- factor(coding$CONSEQUENCE, levels = c("frameshift", "nonsense", "nonsynonymous", "synonymous"))
 
-  coding
+  # group by QUERYID (the row number from the vcf file / rd (rowData))
+  # keep one row based on worst coding variant CONSEQUENCE, one row per gene
+  # generate the ExAC name based on convetion
+  coding_collapsed <- coding %>% data.frame() %>% dplyr::group_by(.data$QUERYID) %>% # group by QUERYID
+    dplyr::slice_min(.data$CONSEQUENCE) %>% # keep one row per variant based on worst CONSEQUENCE, smallest level of factor
+    dplyr::slice_min(.data$TXID) %>% # keep one entry per gene (based on smallest TXID) if found in multiple transcripts
+    dplyr::mutate(ExACname = paste(stringr::str_remove(.data$seqnames, "chr"), .data$start, .data$REF, .data$ALT, sep="-")) %>% # add a variant name in the ExAC style chrom#-position-REF-ALT
+    dplyr:: select(.data$QUERYID, .data$GENEID, .data$CONSEQUENCE, .data$REFCODON, .data$VARCODON, .data$REFAA, .data$VARAA, .data$ExACname)  # keep columns of interest for simplicity
+
+
+  coding_collapsed
+
    }
