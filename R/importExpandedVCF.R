@@ -1,11 +1,5 @@
 importExpandedVCF <- function(vcfFile, genome = "hg19") {
 
-  # check dependencies
-  if(!require(dplyr))
-    stop("the 'dplyr' package must be be installed first")
-  if(!require(VariantAnnotation))
-    stop("the 'variantAnnotation' package must be be installed first")
-
   # check file format of vcf
   if(!is.character(vcfFile))
     stop("'vcfFile' should be character")
