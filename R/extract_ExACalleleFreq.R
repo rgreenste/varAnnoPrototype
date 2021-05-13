@@ -14,5 +14,18 @@ extract_ExACalleleFreq <- function(rowData){
   # convert the data from JSON format to list
   dat<-httr::content(res, "text") %>% jsonlite::fromJSON()
 
-  dat %>% head()
+  # check that the returned list dat is same length as rowData
+  if(!length(dat) == length(rowData))
+    stop("Error: Query and result do not have the same length")
+
+  # extract the ExAC allele frequencies from the dat list
+  exac_allele_freq<-sapply(dat, function(x){
+    x$allele_freq
+  }) %>%
+    unlist(use.names = T) %>%
+    tibble::as_tibble(rownames = NA) %>%
+    dplyr::mutate(ExACname = rownames(.), ExAC_allele_freq = value) %>%
+    dplyr::select(ExACname, ExAC_allele_freq)
+
+  exac_allele_freq
 }
