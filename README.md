@@ -212,8 +212,8 @@ Next extract Location information about each variant with respect to
 genomic features using the `extract_variantLocation()` function. Variant
 positions are queried against a file of genomic features called
 `TxDb.Hsapiens.UCSC.hg19.knownGene` from the R/Bioconductor package of
-the same name. Information about this package can be found \[here\]
-(<https://bioconductor.org/packages/release/data/annotation/html/TxDb.Hsapiens.UCSC.hg19.knownGene.html>).
+the same name. Information about this package can be found
+[here](https://bioconductor.org/packages/release/data/annotation/html/TxDb.Hsapiens.UCSC.hg19.knownGene.html).
 Information is returned about the location of each variant with respect
 to genomic features and, if located within a gene, additionally the Gene
 ID number for that annotation.
@@ -263,8 +263,8 @@ surrounding genomic sequence and nucleotide consequence of the variant
 is determined by querying the hg19 human genome reference sequence found
 the BioStrings object `BSgenome.Hsapiens.UCSC.hg19` from the
 R/Bioconductor package of the same name. Information about this package
-can be found \[here\]
-(<https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html>).
+can be found
+[here](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).
 Information is returned about the consequence of each variant in the
 CONSEQUENCE column. Possible consequences include `frameshift`,
 `nonsense`, `nonsynonymous`, and `synonymous`.
