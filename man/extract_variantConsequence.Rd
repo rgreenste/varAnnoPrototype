@@ -4,12 +4,10 @@
 \alias{extract_variantConsequence}
 \title{Annotate Coding Variants by Biological Consequence}
 \usage{
-extract_variantConsequence(rowData, expandedVCFfile)
+extract_variantConsequence(rowData)
 }
 \arguments{
 \item{rowData}{GRanges object containing genomic coordinates for each variant and Reference (REF) and Alternate (ALT) alleles}
-
-\item{expandedVCFfile}{object of ExpandedVCF class}
 }
 \value{
 a tibble object containing information about the consequence of each variant in the CONSEQUENCE column along with additional information of interest about each variant including the reference allele codon and amino acid (REFCODON, REFAA), the alternative allele codon and amino acid (VARCODON, VARAA) and the variant name in the ExAC style
@@ -18,6 +16,6 @@ a tibble object containing information about the consequence of each variant in 
 Extracts consequences for coding variants, returning only the most deleterious consequence per variant if there are multiple consequences.
 }
 \examples{
-\dontrun{extract_variantConsequence(rowData, expandedVCFfile)}
+\dontrun{extract_variantConsequence(rowData)}
 
 }

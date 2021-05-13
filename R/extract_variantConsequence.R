@@ -3,33 +3,32 @@
 #' Extracts consequences for coding variants, returning only the most deleterious consequence per variant if there are multiple consequences.
 #'
 #' @param rowData GRanges object containing genomic coordinates for each variant and Reference (REF) and Alternate (ALT) alleles
-#' @param expandedVCFfile object of ExpandedVCF class
 #'
 #' @return a tibble object containing information about the consequence of each variant in the CONSEQUENCE column along with additional information of interest about each variant including the reference allele codon and amino acid (REFCODON, REFAA), the alternative allele codon and amino acid (VARCODON, VARAA) and the variant name in the ExAC style
 #' @export
 #'
-#' @examples \dontrun{extract_variantConsequence(rowData, expandedVCFfile)}
+#' @examples \dontrun{extract_variantConsequence(rowData)}
 #'
 #' @importFrom rlang .data
-extract_variantConsequence <- function (rowData, expandedVCFfile){
+extract_variantConsequence <- function (rowData){
 
   # check the class of input file
   if(!class(rowData) == "GRanges" )
-    stop("'rowData' should be of class 'GRanges'. Please read in a vcf file with the importExpandedVCF function and extract the rowData with 'extract_rowData()' before proceeding")
+    stop("Error: 'rowData' should be of class 'GRanges'. Please read in a vcf file with the importExpandedVCF function and extract the rowData with 'extract_rowData()' before proceeding")
 
   # check for correct genome
   if(!GenomeInfoDb::genome(rowData)[1] == "hg19")
-    stop("for this release only 'hg19' is currently supported")
+    stop("Error: For this release only 'hg19' is currently supported")
 
-  # check the class of input file
-  if(!class(expandedVCFfile) == "ExpandedVCF" )
-    stop("'expandedVCFfile' should be of class 'ExpandedVCF'. Please read in a vcf file with the importExpandedVCF function")
+  # check for required metadata column containing ALT allele
+  if(!"ALT" %in% names(GenomicRanges::mcols(rowData)))
+    stop("Error: alternative allele not included in this GRanges object. Generate rowData from ExpandedVCF file with 'extract_rowData().")
 
   # predict coding variants using rowData, txdb, Hspaiens BSGenome object, and alt accessor of vcf
   coding <- VariantAnnotation::predictCoding(rowData, # rowRanges from vcf renamed to have UCSC style chromosomes
                                              TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene, #UCSC txdb object containing feature annotations
                                              seqSource = BSgenome.Hsapiens.UCSC.hg19::Hsapiens, # BSGenome object containing hg19 human genome sequence
-                                             VariantAnnotation::alt(expandedVCFfile)) # alt accessor of EpandedVCF object used to extract the alternate allele for each variant
+                                             rowData$ALT) # alternative allele from the rowData
 
   # explicitly set the levels of consequence by order of severity - frameshift/nonsense are similar without more specific info
   coding$CONSEQUENCE <- factor(coding$CONSEQUENCE, levels = c("frameshift", "nonsense", "nonsynonymous", "synonymous"))
@@ -45,7 +44,7 @@ extract_variantConsequence <- function (rowData, expandedVCFfile){
 
   # make sure there is only one row per QUERYID
   if(!table(coding_collapsed$QUERYID) %>% max() == 1)
-    stop("There is more than one row per variant. Subsequent joins will fail. Additional redundancies must be evaluated")
+    stop("Error: There is more than one row per variant. Subsequent joins will fail. Additional redundancies must be evaluated")
 
   coding_collapsed
 
