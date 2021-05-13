@@ -31,6 +31,11 @@ generate_variantAnnotation <- function(rowData, infoMetrics, variantLocation, va
     dplyr::left_join(variantConsequence, by = "QUERYID") %>% # merge variantConsequence containing coding variant consequence
     dplyr::left_join(exacAlleleFreq, by = c("ExACname.x" = "ExACname")) # merge exacAlleleFreq by ExACname columns
 
-  annotatedVCF_temp %>% head()
+  ## perform checks on the above joins before proceeding ##
 
+  # make sure only coding changes have a consequence
+  if(!(all(table(annotatedVCF_temp$CONSEQUENCE, annotatedVCF_temp$LOCATION) %>% colSums() > 0) %in% c(1,rep(0,6))))
+    warning("Error: Consequences detected for variants that are noncoding. Annotation discrepancy between 'variantLocation' and 'variantConsequence'. Proceed with caution as annoations may be incorrect.")
+
+  annotatedVCF_temp %>% head()
 }
