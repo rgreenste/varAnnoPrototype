@@ -13,14 +13,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-# varAnnoPrototype
+# varAnnoPrototype - a prototype variant annotation tool
 
 <!-- badges: start -->
 <!-- badges: end -->
 
-vcf files are complex and can be difficult to interpret. varAnnoPrototype is a prototype variant annotation tool that extract some relevant information from vcf files in addition to annotating the variants contained within the file to the location and type of genomic feature in which they are located as well as the biological consequence of the variant. This package contains a set of functions to read in a vcf file, extract the relevant information, perform the genomic annotations, and output a dataframe containing the result which can be written to file, read in external software, and shared with others.
+vcf files are complex and can be difficult to interpret. varAnnoPrototype is a prototype variant annotation tool that extracts some relevant information from vcf files in addition to annotating the variants contained within the file to the location and type of genomic feature in which they are located as well as their biological consequence. This package contains a set of functions to read in a vcf file, extract the relevant information, perform the genomic annotations, and output a dataframe containing the result which can be written to file, viewed in external software, and shared with others.
 
 ## Installation
+
 
 The development version of this package can be installed from [GitHub](https://github.com/) with:
 
@@ -28,11 +29,14 @@ The development version of this package can be installed from [GitHub](https://g
 # install.packages("devtools")
 devtools::install_github("rgreenste/varAnnoPrototype")
 ```
+
 ## Example Usage
+
 
 Here is an example of how you could use this package to annotate a vcf file. Please not that at this time only vcf files for human data created with the h19 reference are supported. Additional support for other genome builds including coordinate liftover could be included in future updates.
 
-### Load the library
+
+### Load the Library
 
 After installing the package load the library with the following R code:
 ```{r example_load, echo = T}
@@ -40,9 +44,10 @@ library(varAnnoPrototype)
 ## basic example code
 ```
 
-### Read in a vcf fie
 
-A sample vcf file is contained within the extdata of this package. Extract the filepath and load the file with the following code:
+### Read in a vcf File
+
+A sample vcf file is contained within the extdata of this package. Extract the filepath and load the file with the following code using the `importExpandedVCF()` function:
 
 ```{r example_readVCF, echo = T}
 # extract the path to the vcf file
@@ -56,11 +61,10 @@ vcfTest
 ```
 
 
+### Extract rowData from ExpandedVCF File
 
-### Extract rowData from ExpandedVCF file
 
-
-Next extract the rowData from the the ExpandedVCF object. rowData contains the genomic coordinates of the variants along with the Reference (REF) and Alternate (ALT) alleles. A column contain the variant name in the ExAC notation style (chromosome-position-REF-ALT) is created from the information in rowData:
+Next extract the rowData from the the ExpandedVCF object using the `extract_rowData()` function. rowData contains the genomic coordinates of the variants along with the Reference (REF) and Alternate (ALT) alleles. A column contain the variant name in the ExAC notation style (chromosome-position-REF-ALT) is created from the information in rowData:
 
 ```{r example_rowData, echo = T}
 # extract info from the ExpandedVCF object
@@ -71,11 +75,10 @@ rd
 ```
 
 
-
 ### Extract Metrics from INFO Field of vcf File
 
 
-Next extract some metrics from the INFO field of the vcf file via the ExpandedVCF object including type of variant, depth of sequencing coverage at site of variation, number of reads supporting the variant, number of of reads supporting the reference and percentage of reads supporting the variant.
+Next extract some metrics from the INFO field of the vcf file via the ExpandedVCF object using the `extract_infoMetrics()` function. Metrics include type of variant, depth of sequencing coverage at site of variation, number of reads supporting the variant, number of of reads supporting the reference and percentage of reads supporting the variant. Variant types include `snp` or single nucleotide polymorphism, `mnp` or multinucleotide polymorphism, `ins` or insertion, `del` or deletion, or `complex` which includes events such as composite insertion and substitutions.
 
 ```{r example_infoMetrics, echo = T}
 # extract info from the ExpandedVCF object
@@ -89,7 +92,7 @@ head(infoMetrics)
 ### Annotate Variants Based on Genomic Feature Location
 
 
-Next extract Location information about each variant with respect to genomic features. Variant positions are queried against a file of genomic features called `TxDb.Hsapiens.UCSC.hg19.knownGene` from the R/Bioconductor package of the same name. Information about this package can be found [here] (https://bioconductor.org/packages/release/data/annotation/html/TxDb.Hsapiens.UCSC.hg19.knownGene.html). Information is returned about the location of each variant with respect to genomic features and, if located within a gene, additionally the Gene ID number for that annotation. 
+Next extract Location information about each variant with respect to genomic features using the `extract_variantLocation()` function. Variant positions are queried against a file of genomic features called `TxDb.Hsapiens.UCSC.hg19.knownGene` from the R/Bioconductor package of the same name. Information about this package can be found [here] (https://bioconductor.org/packages/release/data/annotation/html/TxDb.Hsapiens.UCSC.hg19.knownGene.html). Information is returned about the location of each variant with respect to genomic features and, if located within a gene, additionally the Gene ID number for that annotation. 
 
 Possible genomic feature locations include `coding`, `spliceSite`, `promoter`, `fiveUTR`, `threeUTR`, `intron`, and `intergenic`. 
 
@@ -105,7 +108,7 @@ varLoc
 ### Annotate Coding Variants by Biological Consequence
 
 
-Next extract information about the biological consequence of variants within coding regions of the genome. Coding variant positions with respect to genes are determined by querying against the `TxDb.Hsapiens.UCSC.hg19.knownGene` genomic feature file. The surrounding genomic sequence and nucleotide consequence of the variant is determined by querying the hg19 human genome reference sequence found the BioStrings object `BSgenome.Hsapiens.UCSC.hg19` from the R/Bioconductor package of the same name. Information about this package can be found [here] (https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html). Information is returned about the consequence of each variant in the CONSEQUENCE column. Possible consequences include `frameshift`, `nonsense`, `nonsynonymous`, and `synonymous`.  
+Next extract information about the biological consequence of variants within coding regions of the genome using the `extract_variantConsequence()` function. Coding variant positions with respect to genes are determined by querying against the `TxDb.Hsapiens.UCSC.hg19.knownGene` genomic feature file. The surrounding genomic sequence and nucleotide consequence of the variant is determined by querying the hg19 human genome reference sequence found the BioStrings object `BSgenome.Hsapiens.UCSC.hg19` from the R/Bioconductor package of the same name. Information about this package can be found [here] (https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html). Information is returned about the consequence of each variant in the CONSEQUENCE column. Possible consequences include `frameshift`, `nonsense`, `nonsynonymous`, and `synonymous`.  
 
 Additional information of interest about each variant is also returned, including the reference allele codon and amino acid (REFCODON, REFAA), the alternative allele codon and amino acid (VARCODON, VARAA) and the variant name in the ExAC style. 
 
@@ -119,6 +122,58 @@ varConseq
 ```
 
 
+### Extract Allele Frequencies from ExAC API
 
 
+Next perform a bulk query to ExAC API for all variants based on their ExAC name using the `extract_ExACalleleFreq()` function. Information containing allele frequencies and ExAC variant names for variants present within the ExAC database are returned.
+
+
+```{r example_exacFreq, echo = T, warning = F}
+# perform bulk query to ExAC database for all variants by ExAC ID and return allele frequencies
+exacAF<-extract_ExACalleleFreq(rd)
+
+# take a quick look at the result
+head(exacAF)
+```
+
+
+
+### Generate Final Variant Annotation for Export
+
+
+Next a series of joins of the previously generated datasets are performed to yield a final variant annotation file for export using the `generate_variantAnnotation()` function.
+
+
+```{r example_generateAnno, echo = T, warning = F}
+# generate final annotation dataframe
+varAnno<-generate_variantAnnotation(rd, infoMetrics, varLoc, varConseq, exacAF)
+
+# take a quick look at the result
+head(varAnno)
+```
+
+
+
+### Write to File
+
+
+The `varAnno` dataframe can be written to file for viewing in external software and sharing with others.
+
+```{r example_writeFile, echo = T, warning = F}
+
+# export results to csv file
+write.csv(varAnno, file = "annotated_challenge_data_vcf.csv", row.names = F)
+```
+
+
+## Get Help
+
+Help information an documentation for functions in this package can be accessed by typing a '?' before the function name. An example is included below:
+
+```{r example_getHelp, echo = T, warning = F}
+
+# get help for a function
+?generate_variantAnnotation
+
+```
 
