@@ -53,5 +53,11 @@ generate_variantAnnotation <- function(rowData, infoMetrics, variantLocation, va
   if(!all(annotatedVCF_temp$QUERYID %in% seq(1:length(rowData))))
     warning("Error: Some variants have been dropped from original file. Proceed with caution as annotations may be incorrect.")
 
-    annotatedVCF_temp %>% head()
+  # select final columns and rename
+  annotatedVCF<-annotatedVCF_temp %>%
+    dplyr::select(-QUERYID, -GENEID.y, -ExACname.y, # drop redundant columns and QUERYID which is just an index value
+                  ExACname = ExACname.x, # rename column for clarity
+                  GENEID_Entrez = GENEID.x) # rename column for clarity
+
+  annotatedVCF
 }
