@@ -16,6 +16,8 @@ extract_variantLocation <- function (rowData) {
   if(!GenomeInfoDb::genome(rowData)[1] == "hg19")
     stop("Error: For this release only 'hg19' is currently supported")
 
+  message("Determining the location of variants with respect to genomic features")
+
   # annotate variants based on txdb
   allvar <- VariantAnnotation::locateVariants(rowData, # rowRanges from vcf renamed to have UCSC style chromosomes
                                               TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene, #UCSC txdb object
@@ -23,6 +25,8 @@ extract_variantLocation <- function (rowData) {
 
   # explicitly reorder the levels of the LOCATION factor by order of assumed 'severity' if mutated
   allvar$LOCATION <- factor(allvar$LOCATION, levels = c("coding", "spliceSite", "fiveUTR", "promoter", "threeUTR", "intron", "intergenic"))
+
+  message("Extracting the feature annotation likely to have the most deleterious consequence if mutated")
 
   # group by QUERYID (the row number from the vcf file / rd (rowData))
   # keep rows based on location type in order of worst "consequence"
