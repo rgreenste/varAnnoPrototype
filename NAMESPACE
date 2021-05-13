@@ -3,6 +3,7 @@
 export("%>%")
 export(extract_infoMetrics)
 export(extract_rowData)
+export(extract_variantConsequence)
 export(extract_variantLocation)
 export(importExpandedVCF)
 importFrom(magrittr,"%>%")

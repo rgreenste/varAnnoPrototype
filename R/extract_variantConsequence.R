@@ -1,3 +1,16 @@
+#' Annotate Coding Variants by Biological Consequence
+#'
+#' Extracts consequences for coding variants, returning only the most deleterious consequence per variant if there are multiple consequences.
+#'
+#' @param rowData GRanges object containing genomic coordinates for each variant and Reference (REF) and Alternate (ALT) alleles
+#' @param expandedVCFfile object of ExpandedVCF class
+#'
+#' @return a tibble object containing information about the consequence of each variant in the CONSEQUENCE column along with additional information of interest about each variant including the reference allele codon and amino acid (REFCODON, REFAA), the alternative allele codon and amino acid (VARCODON, VARAA) and the variant name in the ExAC style
+#' @export
+#'
+#' @examples \dontrun{extract_variantConsequence(rowData, expandedVCFfile)}
+#'
+#' @importFrom rlang .data
 extract_variantConsequence <- function (rowData, expandedVCFfile){
 
   # check the class of input file
