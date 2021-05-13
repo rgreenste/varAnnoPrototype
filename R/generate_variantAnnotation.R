@@ -37,5 +37,14 @@ generate_variantAnnotation <- function(rowData, infoMetrics, variantLocation, va
   if(!(all(table(annotatedVCF_temp$CONSEQUENCE, annotatedVCF_temp$LOCATION) %>% colSums() > 0) %in% c(1,rep(0,6))))
     warning("Error: Consequences detected for variants that are noncoding. Annotation discrepancy between 'variantLocation' and 'variantConsequence'. Proceed with caution as annoations may be incorrect.")
 
-  annotatedVCF_temp %>% head()
+  # check that GENEIDs from variantLocation and variantConsequence the same?
+  if(!mean(annotatedVCF_temp$GENEID.x == annotatedVCF_temp$GENEID.y, na.rm = T) == 1)
+    warning("Error: Mismatch beween GENEID columns detected. Annotation discrepancy between 'variantLocation' and 'variantConsequence'. Proceed with caution as annoations may be incorrect.")
+
+   # check that ExAC names from rowData and exacAlleleFreq match
+  if(!mean(annotatedVCF_temp$ExACname.x == annotatedVCF_temp$ExACname.y, na.rm = T) == 1)
+    warning("Error: Mismatch beween ExACname columns detected. Annotation discrepancy between 'rowData' and 'exacAlleleFreq'. Proceed with caution as annoations may be incorrect.")
+
+
+    annotatedVCF_temp %>% head()
 }
