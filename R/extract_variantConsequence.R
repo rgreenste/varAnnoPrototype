@@ -24,6 +24,8 @@ extract_variantConsequence <- function (rowData){
   if(!"ALT" %in% names(GenomicRanges::mcols(rowData)))
     stop("Error: alternative allele not included in this GRanges object. Generate rowData from ExpandedVCF file with 'extract_rowData().")
 
+  message("Predicting the effect of coding variants")
+
   # predict coding variants using rowData, txdb, Hspaiens BSGenome object, and alt accessor of vcf
   coding <- VariantAnnotation::predictCoding(rowData, # rowRanges from vcf renamed to have UCSC style chromosomes
                                              TxDb.Hsapiens.UCSC.hg19.knownGene::TxDb.Hsapiens.UCSC.hg19.knownGene, #UCSC txdb object containing feature annotations
@@ -32,6 +34,8 @@ extract_variantConsequence <- function (rowData){
 
   # explicitly set the levels of consequence by order of severity - frameshift/nonsense are similar without more specific info
   coding$CONSEQUENCE <- factor(coding$CONSEQUENCE, levels = c("frameshift", "nonsense", "nonsynonymous", "synonymous"))
+
+  message("Extracting most deleterious consequence per variant")
 
   # group by QUERYID (the row number from the vcf file / rd (rowData))
   # keep one row based on worst coding variant CONSEQUENCE, one row per gene
