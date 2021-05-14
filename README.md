@@ -53,10 +53,10 @@ devtools::install_github("rgreenste/varAnnoPrototype")
 ## Example Usage
 
 Here is an example of how you could use this package to annotate a vcf
-file. Please not that at this time only vcf files for human data created
-with the h19 reference are supported. Additional support for other
-genome builds including coordinate liftover could be included in future
-updates.
+file. Please note that at this time only vcf files for human data
+created with the hg19 reference are supported. Additional support for
+other genome builds including coordinate liftover could be included in
+future updates.
 
 ### Load the Library
 
@@ -155,7 +155,7 @@ vcfTest
 Next extract the rowData from the the ExpandedVCF object using the
 `extract_rowData()` function. rowData contains the genomic coordinates
 of the variants along with the Reference (REF) and Alternate (ALT)
-alleles. A column contain the variant name in the ExAC notation style
+alleles. A column containing the variant name in the ExAC notation style
 (chromosome-position-REF-ALT) is created from the information in
 rowData:
 
@@ -355,7 +355,11 @@ head(exacAF)
 
 Next a series of joins of the previously generated datasets are
 performed to yield a final variant annotation file for export using the
-`generate_variantAnnotation()` function.
+`generate_variantAnnotation()` function. Please see the help file for
+this function for more detailed explanation of each column in the
+output. This help file can be accessed by typing a ‘?’ before the
+function name. An example is included in a subsequent section for
+reference.
 
 ``` r
 # generate final annotation dataframe
@@ -406,7 +410,7 @@ write.csv(varAnno, file = "annotated_challenge_data_vcf.csv", row.names = F)
 
 ## Get Help
 
-Help information an documentation for functions in this package can be
+Help information and documentation for functions in this package can be
 accessed by typing a ‘?’ before the function name. An example is
 included below:
 
@@ -446,6 +450,7 @@ and a package vignette, (2) adding a section for package tests to more
 robustly test included functions for more use cases, (3) expanding
 functions to accept additional variable classes and convert variables
 between classes if necessary, (4) adding support for additional genome
-builds, including genome coordinate liftover, (5) improving functions to
+builds, including genome coordinate liftover, (5) considering manual
+implementation of vcf parsing and annotation, (6) improving functions to
 be more streamlined with additional checks and informative
 errors/warnings.
