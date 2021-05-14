@@ -1,4 +1,5 @@
 ---
+title: "varAnnoPrototype - A Prototype Variant Annotation Tool"
 output: 
   github_document:
     toc: true
@@ -15,7 +16,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# varAnnoPrototype - a prototype variant annotation tool
+## Motivation for varAnnoPrototype
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -181,7 +182,7 @@ Help information an documentation for functions in this package can be accessed 
 
 ## Development Process
 
-This is the authors first experience working with vcf files, performing variant annotation, querying APIs, and writing an R package. The code in this package is the results of a lot of reading on the above topics and much trial and error over a relatively limited time frame (~1 week). The basic structure of the analysis performed in this package was originally written in an R script meant to be run interactively. This R script, `varAnno_interactive.R` is included in this repository for reference purposes. The core processes of this interactive R script were converted into R package functions and developed using helper functions from R packages including [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [roxygen2](https://cran.r-project.org/web/packages/roxygen2/index.html). Helpful information on the basics of creating R packages was gleaned from resources including [R packages](https://r-pkgs.org/index.html) by Hadley Wickham and Jenny Bryan. This package is very much a prototype and there is significant room for improvement. The author is open to any and all feedback and will update the package and/or add features as time permits.
+This is the author's first experience working with vcf files, performing variant annotation, querying APIs, and writing an R package. The code in this package is the results of a lot of reading on the above topics and much trial and error over a relatively limited time frame (~1 week). The basic structure of the analysis performed in this package was originally written in an R script meant to be run interactively. This R script, `varAnno_interactive.R` is included in this repository for reference purposes. The core processes of this interactive R script were converted into R package functions and developed using helper functions from R packages including [devtools](https://cran.r-project.org/web/packages/devtools/index.html) and [roxygen2](https://cran.r-project.org/web/packages/roxygen2/index.html). Helpful information on the basics of creating R packages was gleaned from resources including [R packages](https://r-pkgs.org/index.html) by Hadley Wickham and Jenny Bryan. This package is very much a prototype and there is significant room for improvement. The author is open to any and all feedback and will update the package and/or add features as time permits.
 
 
 

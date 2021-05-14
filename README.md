@@ -1,30 +1,31 @@
+varAnnoPrototype - A Prototype Variant Annotation Tool
+================
 
--   [varAnnoPrototype - a prototype variant annotation
-    tool](#varannoprototype---a-prototype-variant-annotation-tool)
-    -   [Installation](#installation)
-    -   [Example Usage](#example-usage)
-        -   [Load the Library](#load-the-library)
-        -   [Read in a vcf File](#read-in-a-vcf-file)
-        -   [Extract rowData from ExpandedVCF
-            File](#extract-rowdata-from-expandedvcf-file)
-        -   [Extract Metrics from INFO Field of vcf
-            File](#extract-metrics-from-info-field-of-vcf-file)
-        -   [Annotate Variants Based on Genomic Feature
-            Location](#annotate-variants-based-on-genomic-feature-location)
-        -   [Annotate Coding Variants by Biological
-            Consequence](#annotate-coding-variants-by-biological-consequence)
-        -   [Extract Allele Frequencies from ExAC
-            API](#extract-allele-frequencies-from-exac-api)
-        -   [Generate Final Variant Annotation for
-            Export](#generate-final-variant-annotation-for-export)
-        -   [Write to File](#write-to-file)
-    -   [Get Help](#get-help)
-    -   [Development Process](#development-process)
-    -   [Future Directions](#future-directions)
+-   [Motivation for varAnnoPrototype](#motivation-for-varannoprototype)
+-   [Installation](#installation)
+-   [Example Usage](#example-usage)
+    -   [Load the Library](#load-the-library)
+    -   [Read in a vcf File](#read-in-a-vcf-file)
+    -   [Extract rowData from ExpandedVCF
+        File](#extract-rowdata-from-expandedvcf-file)
+    -   [Extract Metrics from INFO Field of vcf
+        File](#extract-metrics-from-info-field-of-vcf-file)
+    -   [Annotate Variants Based on Genomic Feature
+        Location](#annotate-variants-based-on-genomic-feature-location)
+    -   [Annotate Coding Variants by Biological
+        Consequence](#annotate-coding-variants-by-biological-consequence)
+    -   [Extract Allele Frequencies from ExAC
+        API](#extract-allele-frequencies-from-exac-api)
+    -   [Generate Final Variant Annotation for
+        Export](#generate-final-variant-annotation-for-export)
+    -   [Write to File](#write-to-file)
+-   [Get Help](#get-help)
+-   [Development Process](#development-process)
+-   [Future Directions](#future-directions)
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# varAnnoPrototype - a prototype variant annotation tool
+## Motivation for varAnnoPrototype
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -416,7 +417,7 @@ included below:
 
 ## Development Process
 
-This is the authors first experience working with vcf files, performing
+This is the author’s first experience working with vcf files, performing
 variant annotation, querying APIs, and writing an R package. The code in
 this package is the results of a lot of reading on the above topics and
 much trial and error over a relatively limited time frame (\~1 week).
