@@ -6,3 +6,4 @@
 ^annotated_challenge_data_vcf\.csv$
 ^LICENSE\.md$
 ^README\.Rmd$
+^sessionInfo\.txt$
