@@ -232,7 +232,7 @@ head(infoMetrics)
 
 ### Annotate Variants Based on Genomic Feature Location
 
-Next extract Location information about each variant with respect to
+Next extract location information about each variant with respect to
 genomic features using the `extract_variantLocation()` function. Variant
 positions are queried against a file of genomic features called
 `TxDb.Hsapiens.UCSC.hg19.knownGene` from the R/Bioconductor package of
@@ -285,7 +285,7 @@ respect to genes are determined by querying against the
 `TxDb.Hsapiens.UCSC.hg19.knownGene` genomic feature file. The
 surrounding genomic sequence and nucleotide consequence of the variant
 is determined by querying the hg19 human genome reference sequence found
-the BioStrings object `BSgenome.Hsapiens.UCSC.hg19` from the
+in the BioStrings object `BSgenome.Hsapiens.UCSC.hg19` from the
 R/Bioconductor package of the same name. Information about this package
 can be found
 [here](https://bioconductor.org/packages/release/data/annotation/html/BSgenome.Hsapiens.UCSC.hg19.html).
